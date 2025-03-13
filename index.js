@@ -33,7 +33,7 @@ async function main() {
     if (link == "") {
       continue;
     }
-    if (link.startsWith('#')) {
+    if (link.startsWith("#")) {
       continue;
     }
 
@@ -43,7 +43,7 @@ async function main() {
     } catch (e) {
       console.warn("invalid url: '%s'", link);
       continue;
-    };
+    }
 
     if (url.host != "t.me") {
       wtf.push(link);
@@ -63,32 +63,46 @@ async function main() {
 
     try {
       link = url.toString();
-      await page.goto(link, { waitUntil: ['load', 'networkidle2'] });
+      await page.goto(link, { waitUntil: ["load", "networkidle2"] });
       console.log("link: %s", link);
-      const btn_text = await page.$eval('a.tgme_action_button_new', (el) => { return el.innerHTML });
+      const btn_text = await page.$eval("a.tgme_action_button_new", (el) => {
+        return el.innerHTML;
+      });
 
       switch (btn_text) {
         case "Send Message": // Definitely a user
           invalid.push(link);
+          console.log("...invalid");
           break;
         case "View in Telegram": // Channel or group?
-          try { // if context link is present and shows "Preview channel", then definitely channel
-            const context_link_text = await page.$eval('a.tgme_page_context_link', (el) => { return el.innerHTML });
+          try {
+            // if context link is present and shows "Preview channel", then definitely channel
+            const context_link_text = await page.$eval(
+              "a.tgme_page_context_link",
+              (el) => {
+                return el.innerHTML;
+              },
+            );
             console.log(context_link_text);
             switch (context_link_text) {
               case "Preview channel":
                 channels.push(link);
+                console.log("...channel");
                 break;
               default:
                 wtf.push(link);
+                console.log("...wtf?");
                 break;
             }
-          } catch (e) { // if context link is missing, probably group
+          } catch (e) {
+            // if context link is missing, probably group
             groups.push(link);
+            console.log("...group");
           }
           break;
         default:
           wtf.push(link);
+          console.log("...default wtf");
           break;
       }
     } catch (e) {
@@ -118,6 +132,12 @@ async function main() {
   console.log("");
   console.log("Channels:");
   channels.forEach(function(item) {
+    console.log(item);
+  });
+
+  console.log("");
+  console.log("Groups:");
+  groups.forEach(function(item) {
     console.log(item);
   });
 }
