@@ -60,7 +60,7 @@ async function main() {
     if (url.pathname.startsWith("/s/")) {
       url.pathname = url.pathname.slice(3);
     }
-    segments = url.pathname.split("/").filter((segment) => segment !== "");
+    const segments = url.pathname.split("/").filter((segment) => segment !== "");
     if (segments.length > 0) {
       url.pathname = "/" + segments[0];
     } else {
