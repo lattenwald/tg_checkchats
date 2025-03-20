@@ -5,6 +5,7 @@ puppeteer.use(StealthPlugin());
 import fs from "fs";
 import minimist from "minimist";
 
+var checked = new Set();
 var groups = [];
 var channels = [];
 var invites = [];
@@ -45,6 +46,11 @@ async function main() {
       continue;
     }
 
+    if (checked.has(link)) {
+      continue;
+    }
+    checked.add(link);
+
     if (url.host != "t.me") {
       wtf.push(link);
       continue;
@@ -60,7 +66,9 @@ async function main() {
     if (url.pathname.startsWith("/s/")) {
       url.pathname = url.pathname.slice(3);
     }
-    const segments = url.pathname.split("/").filter((segment) => segment !== "");
+    const segments = url.pathname
+      .split("/")
+      .filter((segment) => segment !== "");
     if (segments.length > 0) {
       url.pathname = "/" + segments[0];
     } else {
