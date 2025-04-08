@@ -55,7 +55,10 @@ async function main() {
       wtf.push(link);
       continue;
     }
-    if (url.pathname.startsWith("/c/")) {
+    if (
+      url.pathname.startsWith("/c/") ||
+      url.pathname.startsWith("/joinchat/")
+    ) {
       wtf.push(link);
       continue;
     }
